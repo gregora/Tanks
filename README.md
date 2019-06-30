@@ -1,4 +1,4 @@
-#Multiplayer game written in java
+# Multiplayer game written in java
 
 This is a simple game, writte in Java (both front and back end).
 
