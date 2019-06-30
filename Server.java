@@ -24,12 +24,6 @@ public class Server{
 
 
 
-	private static void calculate() {
-
-
-    }
-
-
 	public static void main(String[] args) throws InterruptedException {
 
       double[] car1 = {-50, -100, 20, 0, 0};
@@ -107,7 +101,6 @@ class Calc extends Thread implements Runnable {
 
   public void run(){
 
-    Server.bullets[0][0] = 10;
 
     while (true){
 

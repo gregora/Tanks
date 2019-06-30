@@ -215,7 +215,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 
 		g2d.drawString(outputstring, 10, 15);
-		g2d.drawString("Speed: " + String.valueOf((int)(Multiplayer.speedall*(3.6/10)))+"km/h", 10, s_height - 80);
+		g2d.drawString("Speed: " + String.valueOf((int)(Multiplayer.speedall*(3.6/10)))+"km/h", 10, s_height - 20);
 
     repaint();
 
@@ -228,12 +228,8 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 				/////////start graphics
 
-
-				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		    Multiplayer.s_width = (int) screenSize.getWidth();
-		    Multiplayer.s_height = (int) screenSize.getHeight();
-
 		    JFrame frame = new JFrame("Game");
+
 
 				Multiplayer Multiplayer = new Multiplayer();
 
@@ -306,7 +302,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 						if(connected && !collision){
 
-							if(key == 'w' && Multiplayer.speedall < 30){
+							if(key == 'w' && Multiplayer.speedall < 70){
 
 			          Multiplayer.speedall = Multiplayer.speedall + 2;
 
@@ -327,14 +323,41 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 					}
 
+					if(e.getKeyCode() == 27){
+
+						System.exit(0);
+
+					}
+
 
 		      }
 		      public void keyReleased(KeyEvent e) {}
 		      public void keyTyped(KeyEvent e) {}
 		    });
 
+				//if in developement set this to true
+
+				boolean developement = false;
+
+				if(developement){
+
+					Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+			    Multiplayer.s_width = (int) screenSize.getWidth() /2;
+			    Multiplayer.s_height = (int) screenSize.getHeight() /2;
+
+				}else{
+
+					Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+					Multiplayer.s_width = (int) screenSize.getWidth();
+					Multiplayer.s_height = (int) screenSize.getHeight();
+
+					frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
+				}
+
 				frame.setSize(Multiplayer.s_width, Multiplayer.s_height);
 				frame.setResizable(false);
+				frame.setUndecorated(true);
 				frame.setVisible(true);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -450,19 +473,21 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 public static void calculate(){
 
+
 		if(angle >= 360 || angle <= -360){
 
 			angle = 0;
 
 		}
 
+
+		///calculate difference between frames
 		Multiplayer.time = System.currentTimeMillis();
-
 		difference = time - lasttime;
-
 		lasttime = time;
 
 
+		//predict positions of other cars and check for collisions
 
 		for (int i = 0; i<cars.length; i++){
 
@@ -490,7 +515,7 @@ public static void calculate(){
 
 	}
 
-
+		///predict bullet positions
 
 		for (int i = 0; i<bullets.length; i++){
 
@@ -511,21 +536,15 @@ public static void calculate(){
     }
 
 
-		if(connected && !collision){
+		////get angle and gun angle if connected
 
+		if(connected && !collision){
 
 			Point p = MouseInfo.getPointerInfo().getLocation();
 			double mx = p.getX();
 			double my = p.getY();
 
-			if(speedall < 10){
-				angle = angle +((mx - s_width/2)/s_width)*difference/20*(speedall + 30)/100;
-			}else if(speedall > 10){
-
-				angle = angle +((mx - s_width/2)/s_width)*difference/20;
-
-			}
-
+			angle = angle +((mx - s_width/2)/s_width)*difference*3/100;
 
 
 			cars[id][3] = angle;
@@ -540,17 +559,11 @@ public static void calculate(){
 
 			}
 
-			//System.out.println(angle + ", " + gunangle);
-
-
-
 
 		}
 
 	try{
-
 		Thread.sleep(5); //limit fps
-
 	}catch (Exception e){}
 
 }
@@ -587,13 +600,10 @@ class RunServer extends Thread implements Runnable{
 		String[] arguments = new String[] {"123"};
 
 		try{
-
+			///run server
 			Server.main(arguments);
-
 		}catch (Exception e){
-
 			System.out.println(e);
-
 		}
 
 	}
