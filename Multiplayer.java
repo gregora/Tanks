@@ -321,23 +321,21 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 			        }
 
-					}
+						}
 
-					if(e.getKeyCode() == 27){
+						///in case ESC  is pressed
+						if(e.getKeyCode() == 27){
 
-						System.exit(0);
+							System.exit(0);
 
-					}
-
-
+						}
 		      }
 		      public void keyReleased(KeyEvent e) {}
 		      public void keyTyped(KeyEvent e) {}
 		    });
 
-				//if in developement set this to true
 
-				boolean developement = false;
+				boolean developement = false; //if in developement set this to true (this will resize the window)
 
 				if(developement){
 
@@ -364,19 +362,11 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 				/////////end graphics
 
+
+				///start the main game loop on another thread
 				GameLoop gl = new GameLoop();
-
 				Thread t = new Thread(gl);
-
-				// Invoking the start() method
-				t.start();
-
-				///run main game loop
-
-
-
-
-
+				t.start(); // Invoking the start() method
 
 
 		///start networking
@@ -406,7 +396,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 						try {
 
-							Multiplayer.pingtime = System.currentTimeMillis();
 
 							Multiplayer.sendData[0] = Multiplayer.id;
 							Multiplayer.sendData[1] = Multiplayer.angle;
@@ -420,16 +409,17 @@ public class Multiplayer extends JPanel implements MouseListener {
 								Multiplayer.sendData[4] = 0;
 							}
 
+							Multiplayer.pingtime = System.currentTimeMillis(); //get time necessary to exchange info with server
+
 							oos.writeObject(Multiplayer.sendData);
 							oos.reset();
 
 							recData = (double[][][])ois.readObject();
 
+							Multiplayer.ping = System.currentTimeMillis() - Multiplayer.pingtime; //calculate ping
+
+
 							Multiplayer.bullets = recData[1];
-							//recData = recData[0];
-
-
-							Multiplayer.ping = System.currentTimeMillis() - Multiplayer.pingtime;
 
 							for(int i=0; i<Multiplayer.cars.length; i++){
 
@@ -469,7 +459,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 
 
-//////////improves frame rate
+//////////improves frame rate by predicting position of other objects
 
 public static void calculate(){
 

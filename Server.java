@@ -167,6 +167,10 @@ class Calc extends Thread implements Runnable {
               Server.cars[i2][0] = Math.random()*1000;
               Server.cars[i2][1] = Math.random()*1000;
 
+              Server.bullets[i][0] = 0;
+              Server.bullets[i][1] = 0;
+              Server.bullets[i][2] = 0;
+
             }
 
           }
