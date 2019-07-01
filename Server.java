@@ -314,9 +314,14 @@ class NewClient extends Thread implements Runnable {
 
           double [] recData =  (double[])ois.readObject();
 
-          Server.cars[id][3] = recData[1];
-          Server.cars[id][2] = recData[2];
-          Server.cars[id][4] = recData[3];
+
+          if(recData[2] < 72 && recData[2] > -72){
+
+            Server.cars[id][3] = recData[1];
+            Server.cars[id][2] = recData[2];
+            Server.cars[id][4] = recData[3];
+
+          }
 
           if(recData[4] == 1 && fireTime + 5000 < System.currentTimeMillis()){
 
