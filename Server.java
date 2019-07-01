@@ -1,3 +1,6 @@
+////programmed by Gregor A.
+////you can contact me by mail gregor372@gmail.com
+
 import java.util.Random;
 import java.awt.*;
 import java.awt.event.*;
