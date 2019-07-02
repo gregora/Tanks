@@ -122,12 +122,11 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 	      g2d.rotate(Math.toRadians(carang), cx - xint + s_width/2, -cy + yint + s_height/2);
 				g2d.setColor(new Color (0, 70, 0));
-		    g2d.fillRect(cx -15 - xint + s_width/2, -cy -35 + yint + s_height/2, 30, 70);
+		    g2d.fillRoundRect(cx -15 - xint + s_width/2, -cy -25 + yint + s_height/2, 30, 50, 7, 7);
 				g2d.setColor(new Color (0, 38, 10));
-				g2d.fill(new Ellipse2D.Double(cx -15 - xint + s_width/2, -cy -15 + yint + s_height/2, 30, 30));
-				g2d.setColor(new Color (0, 0, 0));
+				g2d.fill(new Ellipse2D.Double(cx -12 - xint + s_width/2, -cy -12 + yint + s_height/2, 24, 24));
 				g2d.setStroke(new BasicStroke(5));
-				g2d.draw(new Line2D.Double(cx - xint + s_width/2, -cy + yint + s_height/2, cx - xint + s_width/2 + Math.sin(Math.toRadians(cargunang - carang))*20, -cy + yint + s_height/2 - Math.cos(Math.toRadians(cargunang - carang))*20));
+				g2d.draw(new Line2D.Double(cx - xint + s_width/2, -cy + yint + s_height/2, cx - xint + s_width/2 + Math.sin(Math.toRadians(cargunang - carang))*30, -cy + yint + s_height/2 - Math.cos(Math.toRadians(cargunang - carang))*30));
 
 				g2d.rotate(Math.toRadians(-carang), cx - xint + s_width/2, -cy + yint + s_height/2);
 
@@ -148,22 +147,29 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 			if(bx != 0 || by != 0){
 
-				g2d.fill(new Ellipse2D.Double(bx - xint + s_width/2 - 3, -by -3 + yint + s_height/2, 6, 6));
+				g2d.setColor(new Color(0, 0, 0));
+				g2d.fill(new Ellipse2D.Double(bx - xint + s_width/2 - 3, -by -3 + yint + s_height/2, 3, 3));
 
 			}
 
 		}
 
 
-    //player
+    //render player
     g2d.rotate(Math.toRadians(useangle), s_width/2, s_height/2);
     g2d.setColor(new Color (0, 70, 0));
-    g2d.fillRect(s_width/2 - 15, s_height/2 - 35, 30, 70);
+    g2d.fillRoundRect(s_width/2 - 15, s_height/2 - 25, 30, 50, 7, 7);
+
+
+		//experimental
+		//g2d.setColor(new Color (0, 60, 0));
+		//g2d.fill(new Ellipse2D.Double(s_width/2 - 10, s_height/2 + 20, 10, 10));
+		//g2d.fill(new Ellipse2D.Double(s_width/2, s_height/2 + 20, 10, 10));
+
 		g2d.setColor(new Color (0, 38, 10));
-		g2d.fill(new Ellipse2D.Double(s_width/2 - 15, s_height/2 - 15, 30, 30));
-		g2d.setColor(new Color (0, 0, 0));
+		g2d.fill(new Ellipse2D.Double(s_width/2 - 12, s_height/2 - 12, 24, 24));
 		g2d.setStroke(new BasicStroke(5));
-		g2d.draw(new Line2D.Double(s_width/2, s_height/2, s_width/2 + Math.sin(Math.toRadians(gunangle))*20, s_height/2 - Math.cos(Math.toRadians(gunangle))*20));
+		g2d.draw(new Line2D.Double(s_width/2, s_height/2, s_width/2 + Math.sin(Math.toRadians(gunangle))*30, s_height/2 - Math.cos(Math.toRadians(gunangle))*30));
 
 
 
@@ -552,11 +558,11 @@ public static void calculate(){
 
 			if(my - s_height/2 < 0){
 
-				gunangle = - Math.atan((mx - s_width/2)/(my - s_height/2))*180/3.14;
+				gunangle = - Math.toDegrees(Math.atan((mx - s_width/2)/(my - s_height/2)));
 
 			}else{
 
-				gunangle = 180 - Math.atan((mx - s_width/2)/(my - s_height/2))*180/3.14;
+				gunangle = 180 - Math.toDegrees(Math.atan((mx - s_width/2)/(my - s_height/2)));
 
 			}
 

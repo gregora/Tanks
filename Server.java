@@ -279,13 +279,13 @@ class Calc extends Thread implements Runnable {
 
   public static boolean checkCollision(double x1, double y1, double a1, double x2, double y2, double a2){
 
-    Rectangle2D rect1 = new Rectangle2D.Double(x1 - 15, y1 - 35, 30, 70);
+    Rectangle2D rect1 = new Rectangle2D.Double(x1 - 15, y1 - 25, 30, 50);
     AffineTransform af = new AffineTransform();
     af.rotate(Math.toRadians(-a1), x1, y1);
     Shape rrect1 = af.createTransformedShape(rect1);
 
 
-    Rectangle2D rect2 = new Rectangle2D.Double(x2 - 15, y2 - 35, 30, 70);
+    Rectangle2D rect2 = new Rectangle2D.Double(x2 - 15, y2 - 25, 30, 50);
     AffineTransform bf = new AffineTransform();
     bf.rotate(Math.toRadians(-a2), x2, y2);
     Shape rrect2 = bf.createTransformedShape(rect2);
@@ -308,7 +308,7 @@ class Calc extends Thread implements Runnable {
   public static boolean checkBulletCollision(double x1, double y1, double x2, double y2, double a){
 
 
-    Rectangle2D rect1 = new Rectangle2D.Double(x2 - 15, y2 - 35, 30, 70);
+    Rectangle2D rect1 = new Rectangle2D.Double(x2 - 15, y2 - 25, 30, 50);
     AffineTransform af = new AffineTransform();
     af.rotate(Math.toRadians(-a), x2, y2);
     Shape rrect1 = af.createTransformedShape(rect1);
@@ -399,8 +399,8 @@ class NewClient extends Thread implements Runnable {
 
             fireTime = System.currentTimeMillis();
 
-            Server.bullets[id][0] = Server.cars[id][0];
-            Server.bullets[id][1] = Server.cars[id][1];
+            Server.bullets[id][0] = Server.cars[id][0] + Math.sin(Math.toRadians(Server.cars[id][4]))*30;
+            Server.bullets[id][1] = Server.cars[id][1] + Math.cos(Math.toRadians(Server.cars[id][4]))*30;
             Server.bullets[id][2] = Server.cars[id][4];
 
           }
