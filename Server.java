@@ -1,7 +1,7 @@
 ////programmed by Gregor A.
 ////you can contact me by mail gregor372@gmail.com
 
-import java.util.Random;
+import java.util.*;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
@@ -25,6 +25,7 @@ public class Server{
 
   public static int i;
 
+  public static Vector ips = new Vector();
 
 
 	public static void main(String[] args) throws InterruptedException {
@@ -52,20 +53,32 @@ public class Server{
             // socket object to receive incoming client requests
             s = ss.accept();
 
-            System.out.println("A new client is connected : " + s);
+            //check if this ip is already connected
+            if(checkIp(s.getInetAddress().toString())){
 
-            // obtaining input and out streams
-            ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
-            ObjectInputStream ois=new ObjectInputStream(s.getInputStream());
-            DataOutputStream dos=new DataOutputStream(s.getOutputStream());
+              System.out.println("A new client is connected : " + s.getInetAddress());
 
-            // create a new thread object for the client
-            NewClient nc = new NewClient(s, oos, ois, dos);
+              // obtaining input and out streams
+              ObjectOutputStream oos = new ObjectOutputStream(s.getOutputStream());
+              ObjectInputStream ois=new ObjectInputStream(s.getInputStream());
+              DataOutputStream dos=new DataOutputStream(s.getOutputStream());
 
-            Thread t = new Thread(nc);
+              // create a new thread object for the client
+              NewClient nc = new NewClient(s, oos, ois, dos);
 
-            // Invoking the start() method
-            t.start();
+              Thread t = new Thread(nc);
+
+              // Invoking the start() method
+              t.start();
+
+            }else{
+
+              System.out.println("A socket from " + s.getInetAddress() + " tried to connect, but was blocked");
+              s.close();
+
+            }
+
+
 
         }catch (Exception e){
             s.close();
@@ -91,6 +104,57 @@ public class Server{
 
 
 	}
+
+
+  //function to check if incoming ip is already connected
+  public static boolean checkIp(String ip){
+
+    Iterator i = ips.iterator();
+
+    if(i.hasNext()){
+
+      while(i.hasNext()){
+
+        String checkthis = (String) i.next();
+
+        if(checkthis.equals(ip)){
+
+          return false;
+
+        }
+
+      }
+
+    }
+
+    ips.add(ip);
+    return true;
+
+  }
+
+  ///remove ip if player disconnects
+  public static void removeIp(String ip){
+
+        Iterator i = ips.iterator();
+        int index = 0;
+
+        while(i.hasNext()){
+
+          String checkthis = (String) i.next();
+
+          if(checkthis.equals(ip)){
+
+            ips.remove(index);
+
+          }
+
+          index =+ 1;
+
+        }
+
+
+
+  }
 
 
 }
@@ -131,8 +195,15 @@ class Calc extends Thread implements Runnable {
 
                 if(checkCollision(Server.cars[i][0], Server.cars[i][1], Server.cars[i][3], Server.cars[i2][0], Server.cars[i2][1], Server.cars[i2][3])==true){
 
+                  ///if collision  is detected, put cars randomly on the field
+
                   Server.cars[i][2] = 0;
+                  Server.cars[i][0] = Math.random()*1000;
+                  Server.cars[i][1] = Math.random()*1000;
+
                   Server.cars[i2][2] = 0;
+                  Server.cars[i2][0] = Math.random()*1000;
+                  Server.cars[i2][1] = Math.random()*1000;
 
 
                 }
@@ -299,7 +370,7 @@ class NewClient extends Thread implements Runnable {
           dos.writeInt(c);
           id = c;
 
-          double[] newcar = {Math.random()*200, Math.random()*200, 0, 0, 0};
+          double[] newcar = {Math.random()*1000, Math.random()*1000, 0, 0, 0};
           Server.cars[id] = newcar;
 
           break;
@@ -313,6 +384,7 @@ class NewClient extends Thread implements Runnable {
         try {
 
           double [] recData =  (double[])ois.readObject();
+
 
 
           if(recData[2] < 72 && recData[2] > -72){
@@ -339,6 +411,7 @@ class NewClient extends Thread implements Runnable {
           oos.reset();
 
         }catch (Exception e){
+          Server.removeIp(s.getInetAddress().toString());
           s.close();
           double[] change = {0, 0, 0, 0, 0};
           Server.cars[id] = change;

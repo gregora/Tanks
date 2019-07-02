@@ -44,7 +44,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 	public static boolean collision = false;
 
-	public static double[] sendData = new double[5];
+	public static double[] sendData = new double[6];
 
   public static int s_width;
   public static int s_height;
@@ -256,7 +256,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 				}else if(x==1){
 
-					Multiplayer.ip = JOptionPane.showInputDialog(frame, "Server's IP:", "Enter server's IP", JOptionPane.PLAIN_MESSAGE);
+					Multiplayer.ip = JOptionPane.showInputDialog(null, "Server's IP:", "Enter server's IP", JOptionPane.PLAIN_MESSAGE);
 
 					if(Multiplayer.ip==null){
 
@@ -305,6 +305,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 		      public void keyPressed(KeyEvent e) {
 		        char key = e.getKeyChar();
 
+
 						if(connected && !collision){
 
 							if(key == 'w' && Multiplayer.speedall < 70){
@@ -334,6 +335,8 @@ public class Multiplayer extends JPanel implements MouseListener {
 							System.exit(0);
 
 						}
+
+
 		      }
 		      public void keyReleased(KeyEvent e) {}
 		      public void keyTyped(KeyEvent e) {}
@@ -401,12 +404,14 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 						try {
 
-
+							//send all player's data
 							Multiplayer.sendData[0] = Multiplayer.id;
 							Multiplayer.sendData[1] = Multiplayer.angle;
 							Multiplayer.sendData[2] = Multiplayer.speedall;
 							Multiplayer.sendData[3] = Multiplayer.gunangle + Multiplayer.angle;
 
+
+							//send data if player wants to fire a bullet
 							if(Multiplayer.fire){
 								Multiplayer.sendData[4] = 1;
 								Multiplayer.fire = false;
@@ -418,6 +423,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 							oos.writeObject(Multiplayer.sendData);
 							oos.reset();
+
 
 							recData = (double[][][])ois.readObject();
 
