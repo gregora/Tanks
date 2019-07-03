@@ -21,6 +21,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 	public static double x = 0;
 	public static double y = 0;
   public static double speedall;
+	public static double showspeed = 0;
   public static double angle = 0;
 	public static double gunangle = 0;
 
@@ -57,6 +58,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 	private static BufferedImage background;
 
 	public static boolean fire = false;
+	public static double firetime = 0;
 
   public Multiplayer(){
 
@@ -68,7 +70,12 @@ public class Multiplayer extends JPanel implements MouseListener {
   ///mouse listeners
   public void mouseClicked(MouseEvent e){
 
-		fire = true;
+		if(System.currentTimeMillis() - firetime > 5000){
+
+					fire = true;
+					firetime = System.currentTimeMillis();
+
+		}
 
 	}
 
@@ -210,23 +217,79 @@ public class Multiplayer extends JPanel implements MouseListener {
 
     if(fps > 0 && fps!=1000){
 
-      g2d.drawString("FPS: "+fps, s_width - 200, 15);
+      g2d.drawString("FPS: "+fps, s_width - 100, 15);
 
 			//this is here, so the ping doesnt get updated so frequently
 			if(ping > 0){
 
-				g2d.drawString("Ping: " + pingprint + "ms", s_width - 200, 30);
+				g2d.drawString("Ping: " + pingprint + "ms", s_width - 100, 30);
 
 			}
 
     }
 
-
-
-
-
+		///render message
 		g2d.drawString(outputstring, 10, 15);
-		g2d.drawString("Speed: " + String.valueOf((int)(Multiplayer.speedall*(3.6/10)))+"km/h", 10, s_height - 20);
+
+		//g2d.drawString("Speed: " + String.valueOf((int)(Multiplayer.speedall*(3.6/10)))+"km/h", 10, s_height - 20);
+
+		///render speedometer
+		Shape speedometer = new Arc2D.Float(30, s_height - 130, 200, 200, 0, 180, Arc2D.CHORD);
+		Shape spcolor1 = new Arc2D.Float(30, s_height - 130, 200, 200, 180, -120, Arc2D.PIE);
+		Shape spcolor2 = new Arc2D.Float(30, s_height - 130, 200, 200, 60, -30, Arc2D.PIE);
+		Shape spcolor3 = new Arc2D.Float(30, s_height - 130, 200, 200, 30, -30, Arc2D.PIE);
+		Shape spcolor4 = new Arc2D.Float(80, s_height - 80, 100, 100, 0, 180, Arc2D.PIE);
+		Shape spcolor5 = new Arc2D.Float(120, s_height - 40, 20, 20, 0, 360, Arc2D.PIE);
+
+
+		g2d.setColor(new Color(58, 163, 2));
+		g2d.fill(spcolor1);
+		g2d.setColor(new Color(188, 204, 14));
+		g2d.fill(spcolor2);
+		g2d.setColor(new Color(204, 96, 14));
+		g2d.fill(spcolor3);
+		g2d.setColor(new Color(255, 255, 255));
+		g2d.fill(spcolor4);
+		g2d.setStroke(new BasicStroke(2));
+		g2d.setColor(new Color(0, 0, 0));
+		g2d.draw(speedometer);
+		g2d.setColor(new Color(184, 4, 4));
+		g2d.setStroke(new BasicStroke(5));
+
+		//more smooth transition of speed
+		if(showspeed + 2 > speedall && showspeed - 2 < speedall){
+			showspeed = showspeed;
+		}else if(showspeed < speedall){
+			showspeed = showspeed + (speedall - showspeed)/35;
+		}else{
+			showspeed = showspeed - (showspeed - speedall)/35;
+		}
+
+		//draw speedometer pointer
+		g2d.draw(new Line2D.Double(130, s_height - 30, 130 + Math.sin(-Math.toRadians(90 + 180 * (showspeed/70))) * 80, s_height - 30 + Math.cos(-Math.toRadians(90 + 180 * (showspeed/70)))*80));
+		g2d.setColor(new Color(0, 0, 0));
+		g2d.fill(spcolor5);
+
+
+
+		//draw reload time
+		g2d.setColor(new Color(8, 85, 209));
+		if(System.currentTimeMillis() - firetime < 5000){
+
+			g2d.fillRoundRect(s_width - 100, s_height/2 + 100 - (int)((System.currentTimeMillis() - firetime) * 0.04), 30, (int)((System.currentTimeMillis() - firetime) * 0.04), 10, 10);
+
+		}else{
+
+			g2d.fillRoundRect(s_width - 100, s_height/2 - 100, 30, 200, 10, 10);
+
+
+		}
+
+		//draw reload time outline
+		g2d.setColor(new Color(0, 0, 0));
+		g2d.setStroke(new BasicStroke(2));
+		g2d.drawRoundRect(s_width - 100, s_height/2 - 100, 30, 200, 10, 10);
+
 
     repaint();
 
@@ -314,9 +377,9 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 						if(connected && !collision){
 
-							if(key == 'w' && Multiplayer.speedall < 70){
+							if(key == 'w' && Multiplayer.speedall < 62){
 
-			          Multiplayer.speedall = Multiplayer.speedall + 2;
+			          Multiplayer.speedall = Multiplayer.speedall + 10;
 
 
 			        }else if(key == 's'){
@@ -349,7 +412,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 		    });
 
 
-				boolean developement = false; //if in developement set this to true (this will resize the window)
+				boolean developement = true; //if in developement set this to true (this will resize the window)
 
 				if(developement){
 
