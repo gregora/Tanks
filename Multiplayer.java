@@ -37,6 +37,9 @@ public class Multiplayer extends JPanel implements MouseListener {
   public static double lasttime = 0.0;
   public static double difference;
 
+	public static double kills = 0;
+	public static double deaths = 0;
+
   public static int[] fpsdata = new int[100];
   int fps=0;
 	long ping=0;
@@ -103,6 +106,8 @@ public class Multiplayer extends JPanel implements MouseListener {
 		super.paint(g);
 		Graphics2D g2d = (Graphics2D) g;
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		g.setFont(new Font("Georgia", Font.PLAIN, 12));
 
     //background
     g2d.setColor(new Color(18, 155, 66));
@@ -230,6 +235,17 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 		///render message
 		g2d.drawString(outputstring, 10, 15);
+
+		//show kills and deaths
+		g2d.setColor(new Color(255, 255, 255));
+		g2d.fillRoundRect(10, 44, 100, 58, 7, 7);
+		g2d.setStroke(new BasicStroke(2));
+		g2d.setColor(new Color(0, 0, 0));
+		g2d.drawRoundRect(10, 44, 100, 58, 7, 7);
+		g.setFont(new Font("Georgia", Font.PLAIN, 17));
+		g2d.drawString((int)kills + " kills", 20, 70);
+		g2d.drawString((int)deaths + " deaths", 20, 92);
+
 
 		//g2d.drawString("Speed: " + String.valueOf((int)(Multiplayer.speedall*(3.6/10)))+"km/h", 10, s_height - 20);
 
@@ -412,7 +428,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 		    });
 
 
-				boolean developement = true; //if in developement set this to true (this will resize the window)
+				boolean developement = false; //if in developement set this to true (this will resize the window)
 
 				if(developement){
 
@@ -498,6 +514,8 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 							Multiplayer.ping = System.currentTimeMillis() - Multiplayer.pingtime; //calculate ping
 
+							Multiplayer.kills = recData[2][Multiplayer.id][0];
+							Multiplayer.deaths = recData[2][Multiplayer.id][1];
 
 							Multiplayer.bullets = recData[1];
 

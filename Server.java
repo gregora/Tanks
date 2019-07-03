@@ -16,7 +16,7 @@ public class Server{
 
   public static double[][] cars = new double[10][5];
   public static double[][] bullets = new double[10][3];
-
+  public static double[][] kills = new double[10][2];
 
 
   public static double time;
@@ -205,6 +205,13 @@ class Calc extends Thread implements Runnable {
                   Server.cars[i2][0] = Math.random()*1000;
                   Server.cars[i2][1] = Math.random()*1000;
 
+                  //add kills to the list
+                  Server.kills[i][0] = Server.kills[i][0] + 1;
+                  Server.kills[i2][0] = Server.kills[i2][0] + 1;
+
+                  Server.kills[i][1] = Server.kills[i][1] + 1;
+                  Server.kills[i2][1] = Server.kills[i2][1] + 1;
+
 
                 }
 
@@ -244,6 +251,11 @@ class Calc extends Thread implements Runnable {
               Server.bullets[i][0] = 0;
               Server.bullets[i][1] = 0;
               Server.bullets[i][2] = 0;
+
+              //add kills to the list
+              Server.kills[i][0] = Server.kills[i][0] + 1;
+              Server.kills[i2][1] = Server.kills[i2][1] + 1;
+
 
             }
 
@@ -405,7 +417,7 @@ class NewClient extends Thread implements Runnable {
 
           }
 
-          double [][][] sendData = {Server.cars, Server.bullets};
+          double [][][] sendData = {Server.cars, Server.bullets, Server.kills};
 
           oos.writeObject(sendData);
           oos.reset();
