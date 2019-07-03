@@ -21,3 +21,7 @@ You can control  your tank with:
 * S - Decrease speed
 * Mouse position - Speed of turning and turret angle
 * Mouse click - Shoot a projectile
+
+## Screenshots
+
+<img src=https://imgur.com/aDSgPA2>
