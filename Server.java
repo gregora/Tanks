@@ -423,10 +423,13 @@ class NewClient extends Thread implements Runnable {
           oos.reset();
 
         }catch (Exception e){
-          Server.removeIp(s.getInetAddress().toString());
-          s.close();
           double[] change = {0, 0, 0, 0, 0};
           Server.cars[id] = change;
+          try{
+            Thread.sleep(10000);
+          }catch(Exception ex){}
+          Server.removeIp(s.getInetAddress().toString());
+          s.close();
           System.out.println(e);
           break;
         }
@@ -437,6 +440,16 @@ class NewClient extends Thread implements Runnable {
 
 
     }catch(Exception e){
+          double[] change = {0, 0, 0, 0, 0};
+          Server.cars[id] = change;
+          try{
+            Thread.sleep(10000);
+          }catch(Exception ex){}
+          Server.removeIp(s.getInetAddress().toString());
+          try{
+            s.close();
+          }catch(Exception ex){}
+
           System.out.println(e);
     }
 
