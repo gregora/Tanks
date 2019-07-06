@@ -30,8 +30,8 @@ public class Server{
 
 	public static void main(String[] args) throws InterruptedException {
 
-      double[] car1 = {-50, -100, 20, 0, 0};
-      Server.cars[0]=car1;
+      //double[] car1 = {-50, -100, 20, 0, 0};
+      //Server.cars[0]=car1;
 
       ////////start networking
 
@@ -198,12 +198,12 @@ class Calc extends Thread implements Runnable {
                   ///if collision  is detected, put cars randomly on the field
 
                   Server.cars[i][2] = 0;
-                  Server.cars[i][0] = Math.random()*1000;
-                  Server.cars[i][1] = Math.random()*1000;
+                  Server.cars[i][0] = -1500 + Math.random()*3000;
+                  Server.cars[i][1] = -1500 + Math.random()*3000;
 
                   Server.cars[i2][2] = 0;
-                  Server.cars[i2][0] = Math.random()*1000;
-                  Server.cars[i2][1] = Math.random()*1000;
+                  Server.cars[i2][0] = -1500 + Math.random()*3000;
+                  Server.cars[i2][1] = -1500 + Math.random()*3000;
 
                   //add kills to the list
                   Server.kills[i][0] = Server.kills[i][0] + 1;
@@ -245,8 +245,8 @@ class Calc extends Thread implements Runnable {
             if(checkBulletCollision(Server.bullets[i][0], Server.bullets[i][1], Server.cars[i2][0], Server.cars[i2][1], Server.cars[i2][3]) == true){
 
               Server.cars[i2][2] = 0;
-              Server.cars[i2][0] = Math.random()*1000;
-              Server.cars[i2][1] = Math.random()*1000;
+              Server.cars[i2][0] = -1500 + Math.random()*3000;
+              Server.cars[i2][1] = -1500 + Math.random()*3000;
 
               Server.bullets[i][0] = 0;
               Server.bullets[i][1] = 0;
@@ -382,7 +382,7 @@ class NewClient extends Thread implements Runnable {
           dos.writeInt(c);
           id = c;
 
-          double[] newcar = {Math.random()*1000, Math.random()*1000, 0, 0, 0};
+          double[] newcar = {-1500 + Math.random()*3000, -1500 + Math.random()*3000, 0, 0, 0};
           Server.cars[id] = newcar;
 
           break;
