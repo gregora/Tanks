@@ -14,9 +14,12 @@ import java.awt.geom.*;
 @SuppressWarnings("serial")
 public class Server{
 
-  public static double[][] cars = new double[10][5];
+  public static double[][] cars = new double[10][6];
+  ///0 = x coordinate, 1 = y coordinate, 2 = speed, 3 = angle, 4 = gunangle, 5 = time from death
   public static double[][] bullets = new double[10][3];
+  //0 = x, 1 = y, 2 = angle
   public static double[][] kills = new double[10][2];
+  //0 = kills, 1 = deaths
 
   public static double maxspeed = 140;
 
@@ -32,7 +35,7 @@ public class Server{
 	public static void main(String[] args) throws InterruptedException {
 
       //bot
-      //double[] car1 = {-50, -100, 20, 0, 0};
+      //double[] car1 = {-50, -100, 20, 0, 0, 0};
       //Server.cars[0]=car1;
 
       ////////start networking
@@ -427,7 +430,7 @@ class NewClient extends Thread implements Runnable {
           oos.reset();
 
         }catch (Exception e){
-          double[] change = {0, 0, 0, 0, 0};
+          double[] change = {0, 0, 0, 0, 0, 0};
           Server.cars[id] = change;
           try{
             Thread.sleep(10000);
@@ -444,7 +447,7 @@ class NewClient extends Thread implements Runnable {
 
 
     }catch(Exception e){
-          double[] change = {0, 0, 0, 0, 0};
+          double[] change = {0, 0, 0, 0, 0, 0};
           Server.cars[id] = change;
           try{
             Thread.sleep(10000);

@@ -28,7 +28,7 @@ public class Multiplayer extends JPanel implements MouseListener {
   public static int xint = 0;
   public static int yint = 0;
 
-  public static double[][] cars = new double[10][5];
+  public static double[][] cars = new double[10][6]; ///0 = x coordinate, 1 = y coordinate, 2 = speed, 3 = angle, 4 = gunangle, 5 = time from death
 	public static double[][] bullets = new double[10][3];
 
 	public static int id;
@@ -294,11 +294,11 @@ public class Multiplayer extends JPanel implements MouseListener {
 		g2d.setColor(new Color(8, 85, 209));
 		if(System.currentTimeMillis() - firetime < 5000){
 
-			g2d.fillRoundRect(s_width - 100, s_height/2 + 100 - (int)((System.currentTimeMillis() - firetime) * 0.04), 30, (int)((System.currentTimeMillis() - firetime) * 0.04), 10, 10);
+			g2d.fillRoundRect(s_width - 100, s_height/2 -50 - (int)((System.currentTimeMillis() - firetime) * 0.04), 30, (int)((System.currentTimeMillis() - firetime) * 0.04), 10, 10);
 
 		}else{
 
-			g2d.fillRoundRect(s_width - 100, s_height/2 - 100, 30, 200, 10, 10);
+			g2d.fillRoundRect(s_width - 100, s_height/2 - 250, 30, 200, 10, 10);
 
 
 		}
@@ -306,12 +306,12 @@ public class Multiplayer extends JPanel implements MouseListener {
 		//draw reload time outline
 		g2d.setColor(new Color(0, 0, 0));
 		g2d.setStroke(new BasicStroke(2));
-		g2d.drawRoundRect(s_width - 100, s_height/2 - 100, 30, 200, 10, 10);
+		g2d.drawRoundRect(s_width - 100, s_height/2 - 250, 30, 200, 10, 10);
 
 
 
 		///minimap
-		g2d.drawRect(s_width - 302, s_height - 302, 302, 302);
+		g2d.drawRect(s_width - 300, s_height - 300, 300, 300);
 		g2d.drawImage(background, s_width - 300, s_height - 300, 300, 300, null);
 
 		//put cars on minimap
@@ -459,7 +459,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 		    });
 
 
-				boolean developement = false; //if in developement set this to true (this will resize the window)
+				boolean developement = true; //if in developement set this to true (this will resize the window)
 
 				if(developement){
 
