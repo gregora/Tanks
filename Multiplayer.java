@@ -548,7 +548,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 							for(int i=0; i<Multiplayer.cars.length; i++){
 
-								if(Multiplayer.id != i || Math.abs(Multiplayer.cars[id][0] - recData[0][id][0]) < 4){
+								if(Multiplayer.id != i || Math.abs(Multiplayer.cars[id][0] - recData[0][id][0]) > 4){
 
 									Multiplayer.cars[i][4] = recData[0][i][4];
 									Multiplayer.cars[i][3] = recData[0][i][3];
