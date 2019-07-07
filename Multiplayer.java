@@ -396,7 +396,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 							if(key == 'w' && Multiplayer.speedall < 62){
 
 			          Multiplayer.speedall = Multiplayer.speedall + 10;
-								Multiplayer.cars[id][2] = Multiplayer.speedall;
 
 
 			        }else if(key == 's'){
@@ -404,14 +403,10 @@ public class Multiplayer extends JPanel implements MouseListener {
 								if(Multiplayer.speedall>10){
 
 			          	Multiplayer.speedall = Multiplayer.speedall - 10;
-									Multiplayer.cars[id][2] = Multiplayer.speedall;
-
 
 								}else{
 
 									Multiplayer.speedall = 0;
-									Multiplayer.cars[id][2] = Multiplayer.speedall;
-
 
 								}
 
@@ -490,28 +485,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 					Multiplayer.angle = 0;
 
-					//get initial player's coordinates
-
-
-					//send all player's data
-					Multiplayer.sendData[0] = Multiplayer.id;
-					Multiplayer.sendData[1] = Multiplayer.angle;
-					Multiplayer.sendData[2] = Multiplayer.speedall;
-					Multiplayer.sendData[3] = Multiplayer.gunangle + Multiplayer.angle;
-
-					oos.writeObject(Multiplayer.sendData);
-					oos.reset();
-
-					recData = (double[][][])ois.readObject();
-
-					Multiplayer.bullets = recData[1];
-
-					Multiplayer.cars[id][0] = recData[0][id][0];
-					Multiplayer.cars[id][1] = recData[0][id][1];
-
-
-
-
 					while (true) {
 
 						try {
@@ -548,16 +521,12 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 							for(int i=0; i<Multiplayer.cars.length; i++){
 
-								if(Multiplayer.id != i || Math.abs(Multiplayer.cars[id][0] - recData[0][id][0]) > 4){
+								Multiplayer.cars[i][4] = recData[0][i][4];
+								Multiplayer.cars[i][3] = recData[0][i][3];
+								Multiplayer.cars[i][2] = recData[0][i][2];
 
-									Multiplayer.cars[i][4] = recData[0][i][4];
-									Multiplayer.cars[i][3] = recData[0][i][3];
-									Multiplayer.cars[i][2] = recData[0][i][2];
-
-									Multiplayer.cars[i][0] = recData[0][i][0];
-									Multiplayer.cars[i][1] = recData[0][i][1];
-
-								}
+								Multiplayer.cars[i][0] = recData[0][i][0];
+								Multiplayer.cars[i][1] = recData[0][i][1];
 
 							}
 
