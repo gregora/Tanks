@@ -18,6 +18,7 @@ public class Server{
   public static double[][] bullets = new double[10][3];
   public static double[][] kills = new double[10][2];
 
+  public static double maxspeed = 140;
 
   public static double time;
   public static double lasttime = 0.0;
@@ -402,7 +403,7 @@ class NewClient extends Thread implements Runnable {
 
 
 
-          if(recData[2] < 72 && recData[2] > -72){
+          if(recData[2] < Server.maxspeed && recData[2] >= 0){
 
             Server.cars[id][3] = recData[1];
             Server.cars[id][2] = recData[2];

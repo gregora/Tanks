@@ -63,6 +63,8 @@ public class Multiplayer extends JPanel implements MouseListener {
 	public static boolean fire = false;
 	public static double firetime = 0;
 
+	public static double maxspeed = 140;
+
   public Multiplayer(){
 
     addMouseListener(this);
@@ -282,7 +284,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 		}
 
 		//draw speedometer pointer
-		g2d.draw(new Line2D.Double(130, s_height - 30, 130 + Math.sin(-Math.toRadians(90 + 180 * (showspeed/70))) * 80, s_height - 30 + Math.cos(-Math.toRadians(90 + 180 * (showspeed/70)))*80));
+		g2d.draw(new Line2D.Double(130, s_height - 30, 130 + Math.sin(-Math.toRadians(90 + 180 * (showspeed/maxspeed))) * 80, s_height - 30 + Math.cos(-Math.toRadians(90 + 180 * (showspeed/maxspeed)))*80));
 		g2d.setColor(new Color(0, 0, 0));
 		g2d.fill(spcolor5);
 
@@ -422,7 +424,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 						if(connected && !collision){
 
-							if(key == 'w' && Multiplayer.speedall < 62){
+							if(key == 'w' && Multiplayer.speedall < maxspeed - 12){
 
 			          Multiplayer.speedall = Multiplayer.speedall + 10;
 
@@ -638,8 +640,8 @@ public static void calculate(){
 
       if(bullets[i][0] != 0 || bullets[i][1] != 0 || bullets[i][2] != 0){
 
-        bullets[i][0] = bullets[i][0] + Math.sin(Math.toRadians(bullets[i][2]))*500*(difference)/1000;
-        bullets[i][1] = bullets[i][1] + Math.cos(Math.toRadians(bullets[i][2]))*500*(difference)/1000;
+        bullets[i][0] = bullets[i][0] + Math.sin(Math.toRadians(bullets[i][2]))*1000*(difference)/1000;
+        bullets[i][1] = bullets[i][1] + Math.cos(Math.toRadians(bullets[i][2]))*1000*(difference)/1000;
 
 
         if(Calc.checkBulletCollision(bullets[i][0], bullets[i][1], x, y, angle) == true){
@@ -661,7 +663,7 @@ public static void calculate(){
 			double mx = p.getX();
 			double my = p.getY();
 
-			angle = angle +((mx - s_width/2)/s_width)*difference*3/100;
+			angle = angle +((mx - s_width/2)/s_width)*difference*9/100;
 
 
 			cars[id][3] = angle;
