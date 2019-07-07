@@ -30,6 +30,7 @@ public class Server{
 
 	public static void main(String[] args) throws InterruptedException {
 
+      //bot
       //double[] car1 = {-50, -100, 20, 0, 0};
       //Server.cars[0]=car1;
 
@@ -271,6 +272,8 @@ class Calc extends Thread implements Runnable {
 
 
       ///end actual calculations
+
+
 
       Server.lasttime = Server.time;
 

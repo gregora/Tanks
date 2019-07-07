@@ -307,6 +307,35 @@ public class Multiplayer extends JPanel implements MouseListener {
 		g2d.drawRoundRect(s_width - 100, s_height/2 - 100, 30, 200, 10, 10);
 
 
+
+		///minimap
+		g2d.drawRect(s_width - 302, s_height - 302, 302, 302);
+		g2d.drawImage(background, s_width - 300, s_height - 300, 300, 300, null);
+
+		//put cars on minimap
+
+    for(int i=0; i<cars.length; i++){
+
+			if((cars[i][0]!=0 || cars[i][1] != 0) && cars[i][0] > -1500 && cars[i][1] < 1500){
+
+
+	      int cx = (int) Math.round(cars[i][0]);
+	      int cy = (int) Math.round(cars[i][1]);
+				g2d.setColor(new Color (255, 0, 0));
+
+				if(i==id){
+
+					g2d.setColor(new Color (0, 0, 255));
+
+				}
+
+				g2d.fill(new Ellipse2D.Double(s_width + cx/10 - 152, s_height -152 - cy/10, 4, 4));
+
+			}
+
+    }
+
+
     repaint();
 
 
