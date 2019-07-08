@@ -457,7 +457,7 @@ class NewClient extends Thread implements Runnable {
 
 
         }catch (Exception e){
-          double[] change = {0, 0, 0, 0, 0, 0};
+          double[] change = {0, 0, 0, 0, 0, 0, 0};
           Server.cars[id] = change;
           try{
             Thread.sleep(10000);
@@ -474,7 +474,7 @@ class NewClient extends Thread implements Runnable {
 
 
     }catch(Exception e){
-          double[] change = {0, 0, 0, 0, 0, 0};
+          double[] change = {0, 0, 0, 0, 0, 0, 0};
           Server.cars[id] = change;
           try{
             Thread.sleep(10000);

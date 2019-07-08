@@ -104,113 +104,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 		xint = (int) Math.round(x);
 		yint = (int) Math.round(y);
 
-
-		super.paint(g);
-		Graphics2D g2d = (Graphics2D) g;
-		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-		g.setFont(new Font("Georgia", Font.PLAIN, 12));
-
-    //background
-    g2d.setColor(new Color(18, 155, 66));
-    g2d.fillRect(0, 0, s_width, s_height);
-
-    //stuff
-    g2d.rotate(Math.toRadians(-useangle), s_width/2, s_height/2);
-		g2d.drawImage(background,-1500 - xint + s_width/2, -1500 + yint +s_height/2, 3000, 3000, null);
-		g2d.setColor(new Color(0, 0, 0));
-
-		//render other cars
-
-    for(int i=0; i<cars.length; i++){
-
-
-			if(i!=id && cars[i][5] == 1){
-
-	      int cx = (int) Math.round(cars[i][0]);
-	      int cy = (int) Math.round(cars[i][1]);
-
-				double carang = cars[i][3];
-				double cargunang = cars[i][4];
-
-
-	      g2d.rotate(Math.toRadians(carang), cx - xint + s_width/2, -cy + yint + s_height/2);
-				g2d.setColor(new Color (0, 70, 0));
-		    g2d.fillRoundRect(cx -15 - xint + s_width/2, -cy -25 + yint + s_height/2, 30, 50, 7, 7);
-				g2d.setColor(new Color (0, 38, 10));
-				g2d.fill(new Ellipse2D.Double(cx -12 - xint + s_width/2, -cy -12 + yint + s_height/2, 24, 24));
-				g2d.setStroke(new BasicStroke(5));
-				g2d.draw(new Line2D.Double(cx - xint + s_width/2, -cy + yint + s_height/2, cx - xint + s_width/2 + Math.sin(Math.toRadians(cargunang - carang))*30, -cy + yint + s_height/2 - Math.cos(Math.toRadians(cargunang - carang))*30));
-
-				g2d.rotate(Math.toRadians(-carang), cx - xint + s_width/2, -cy + yint + s_height/2);
-
-			}
-
-    }
-
-
-    ///stop renedring other cars
-
-
-		//render bullets
-
-		for(int i=0; i<bullets.length; i++){
-
-			int bx = (int) Math.round(bullets[i][0]);
-			int by = (int) Math.round(bullets[i][1]);
-
-			if(bx != 0 || by != 0){
-
-				g2d.setColor(new Color(0, 0, 0));
-				g2d.fill(new Ellipse2D.Double(bx - xint + s_width/2 - 3, -by -3 + yint + s_height/2, 3, 3));
-
-			}
-
-		}
-
-
-    //render player
-    g2d.rotate(Math.toRadians(useangle), s_width/2, s_height/2);
-    g2d.setColor(new Color (0, 70, 0));
-    g2d.fillRoundRect(s_width/2 - 15, s_height/2 - 25, 30, 50, 7, 7);
-
-
-		//experimental
-		//g2d.setColor(new Color (0, 60, 0));
-		//g2d.fill(new Ellipse2D.Double(s_width/2 - 10, s_height/2 + 20, 10, 10));
-		//g2d.fill(new Ellipse2D.Double(s_width/2, s_height/2 + 20, 10, 10));
-
-		g2d.setColor(new Color (0, 38, 10));
-		g2d.fill(new Ellipse2D.Double(s_width/2 - 12, s_height/2 - 12, 24, 24));
-		g2d.setStroke(new BasicStroke(5));
-		g2d.draw(new Line2D.Double(s_width/2, s_height/2, s_width/2 + Math.sin(Math.toRadians(gunangle))*30, s_height/2 - Math.cos(Math.toRadians(gunangle))*30));
-
-
-
-
-		///render speedometer
-		Shape speedometer = new Arc2D.Float(30, s_height - 130, 200, 200, 0, 180, Arc2D.CHORD);
-		Shape spcolor1 = new Arc2D.Float(30, s_height - 130, 200, 200, 180, -120, Arc2D.PIE);
-		Shape spcolor2 = new Arc2D.Float(30, s_height - 130, 200, 200, 60, -30, Arc2D.PIE);
-		Shape spcolor3 = new Arc2D.Float(30, s_height - 130, 200, 200, 30, -30, Arc2D.PIE);
-		Shape spcolor4 = new Arc2D.Float(80, s_height - 80, 100, 100, 0, 180, Arc2D.PIE);
-		Shape spcolor5 = new Arc2D.Float(120, s_height - 40, 20, 20, 0, 360, Arc2D.PIE);
-
-
-		g2d.setColor(new Color(58, 163, 2));
-		g2d.fill(spcolor1);
-		g2d.setColor(new Color(188, 204, 14));
-		g2d.fill(spcolor2);
-		g2d.setColor(new Color(204, 96, 14));
-		g2d.fill(spcolor3);
-		g2d.setColor(new Color(255, 255, 255));
-		g2d.fill(spcolor4);
-		g2d.setStroke(new BasicStroke(2));
-		g2d.setColor(new Color(0, 0, 0));
-		g2d.draw(speedometer);
-		g2d.setColor(new Color(184, 4, 4));
-		g2d.setStroke(new BasicStroke(5));
-
 		//more smooth transition of speed
 		if(showspeed + 2 > speedall && showspeed - 2 < speedall){
 			showspeed = showspeed;
@@ -220,140 +113,249 @@ public class Multiplayer extends JPanel implements MouseListener {
 			showspeed = showspeed - (showspeed - speedall)/35;
 		}
 
-		//draw speedometer pointer
-		g2d.draw(new Line2D.Double(130, s_height - 30, 130 + Math.sin(-Math.toRadians(90 + 180 * (showspeed/maxspeed))) * 80, s_height - 30 + Math.cos(-Math.toRadians(90 + 180 * (showspeed/maxspeed)))*80));
-		g2d.setColor(new Color(0, 0, 0));
-		g2d.fill(spcolor5);
+		super.paint(g);
+		Graphics2D g2d = (Graphics2D) g;
+		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+		g.setFont(new Font("Georgia", Font.PLAIN, 12));
 
 
 
-		//draw reload time
-		g2d.setColor(new Color(8, 85, 209));
-		if(System.currentTimeMillis() - firetime < 5000){
+		///color screen white if collision accures
+		///*
+		if(cars[id][5]!=1 || collision){
+			g2d.setColor(new Color(255, 255, 255));
+			g2d.fillRect(0, 0, s_width, s_height);
 
-			g2d.fillRoundRect(s_width - 100, s_height/2 -50 - (int)((System.currentTimeMillis() - firetime) * 0.04), 30, (int)((System.currentTimeMillis() - firetime) * 0.04), 10, 10);
+			g2d.setColor(new Color(0, 0, 0));
+
+			g2d.fill(new Arc2D.Float(s_width/2 - 100, s_height/2 - 100, 200, 200, 180, -(float)((System.currentTimeMillis() - cars[id][6])*360/5000), Arc2D.PIE));
+			g2d.setColor(new Color(255, 255, 255));
+			g2d.fill(new Arc2D.Float(s_width/2 - 50, s_height/2 - 50, 100, 100, 180, -360, Arc2D.PIE));
+
+			g2d.setColor(new Color(0, 0, 0));
+			g2d.drawString("Respawning", s_width/2 - 35, s_height/2 + 6);
 
 		}else{
 
-			g2d.fillRoundRect(s_width - 100, s_height/2 - 250, 30, 200, 10, 10);
+			//background
+	    g2d.setColor(new Color(18, 155, 66));
+	    g2d.fillRect(0, 0, s_width, s_height);
+
+	    //stuff
+	    g2d.rotate(Math.toRadians(-useangle), s_width/2, s_height/2);
+			g2d.drawImage(background,-1500 - xint + s_width/2, -1500 + yint +s_height/2, 3000, 3000, null);
+			g2d.setColor(new Color(0, 0, 0));
+
+			//render other cars
+
+	    for(int i=0; i<cars.length; i++){
 
 
-		}
+				if(i!=id && cars[i][5] == 1){
 
-		//draw reload time outline
-		g2d.setColor(new Color(0, 0, 0));
-		g2d.setStroke(new BasicStroke(2));
-		g2d.drawRoundRect(s_width - 100, s_height/2 - 250, 30, 200, 10, 10);
+		      int cx = (int) Math.round(cars[i][0]);
+		      int cy = (int) Math.round(cars[i][1]);
 
-
-
-		///minimap
-		g2d.drawRect(s_width - 300, s_height - 300, 300, 300);
-		g2d.drawImage(background, s_width - 300, s_height - 300, 300, 300, null);
-
-		//put cars on minimap
-    for(int i=0; i<cars.length; i++){
-
-			if(cars[i][5]==1 && cars[i][0] > -1500 && cars[i][1] < 1500){
+					double carang = cars[i][3];
+					double cargunang = cars[i][4];
 
 
-	      int cx = (int) Math.round(cars[i][0]);
-	      int cy = (int) Math.round(cars[i][1]);
-				g2d.setColor(new Color (255, 0, 0));
+		      g2d.rotate(Math.toRadians(carang), cx - xint + s_width/2, -cy + yint + s_height/2);
+					g2d.setColor(new Color (0, 70, 0));
+			    g2d.fillRoundRect(cx -15 - xint + s_width/2, -cy -25 + yint + s_height/2, 30, 50, 7, 7);
+					g2d.setColor(new Color (0, 38, 10));
+					g2d.fill(new Ellipse2D.Double(cx -12 - xint + s_width/2, -cy -12 + yint + s_height/2, 24, 24));
+					g2d.setStroke(new BasicStroke(5));
+					g2d.draw(new Line2D.Double(cx - xint + s_width/2, -cy + yint + s_height/2, cx - xint + s_width/2 + Math.sin(Math.toRadians(cargunang - carang))*30, -cy + yint + s_height/2 - Math.cos(Math.toRadians(cargunang - carang))*30));
 
-				if(i==id){
-
-					g2d.setColor(new Color (0, 0, 255));
+					g2d.rotate(Math.toRadians(-carang), cx - xint + s_width/2, -cy + yint + s_height/2);
 
 				}
 
-				g2d.fill(new Ellipse2D.Double(s_width + cx/10 - 152, s_height -152 - cy/10, 4, 4));
+	    }
+
+
+	    ///stop renedring other cars
+
+
+			//render bullets
+
+			for(int i=0; i<bullets.length; i++){
+
+				int bx = (int) Math.round(bullets[i][0]);
+				int by = (int) Math.round(bullets[i][1]);
+
+				if(bx != 0 || by != 0){
+
+					g2d.setColor(new Color(0, 0, 0));
+					g2d.fill(new Ellipse2D.Double(bx - xint + s_width/2 - 3, -by -3 + yint + s_height/2, 3, 3));
+
+				}
+
+			}
+
+
+	    //render player
+	    g2d.rotate(Math.toRadians(useangle), s_width/2, s_height/2);
+	    g2d.setColor(new Color (0, 70, 0));
+	    g2d.fillRoundRect(s_width/2 - 15, s_height/2 - 25, 30, 50, 7, 7);
+
+
+			//experimental
+			//g2d.setColor(new Color (0, 60, 0));
+			//g2d.fill(new Ellipse2D.Double(s_width/2 - 10, s_height/2 + 20, 10, 10));
+			//g2d.fill(new Ellipse2D.Double(s_width/2, s_height/2 + 20, 10, 10));
+
+			g2d.setColor(new Color (0, 38, 10));
+			g2d.fill(new Ellipse2D.Double(s_width/2 - 12, s_height/2 - 12, 24, 24));
+			g2d.setStroke(new BasicStroke(5));
+			g2d.draw(new Line2D.Double(s_width/2, s_height/2, s_width/2 + Math.sin(Math.toRadians(gunangle))*30, s_height/2 - Math.cos(Math.toRadians(gunangle))*30));
+
+
+			///render speedometer
+			Shape speedometer = new Arc2D.Float(30, s_height - 130, 200, 200, 0, 180, Arc2D.CHORD);
+			Shape spcolor1 = new Arc2D.Float(30, s_height - 130, 200, 200, 180, -120, Arc2D.PIE);
+			Shape spcolor2 = new Arc2D.Float(30, s_height - 130, 200, 200, 60, -30, Arc2D.PIE);
+			Shape spcolor3 = new Arc2D.Float(30, s_height - 130, 200, 200, 30, -30, Arc2D.PIE);
+			Shape spcolor4 = new Arc2D.Float(80, s_height - 80, 100, 100, 0, 180, Arc2D.PIE);
+			Shape spcolor5 = new Arc2D.Float(120, s_height - 40, 20, 20, 0, 360, Arc2D.PIE);
+
+
+			g2d.setColor(new Color(58, 163, 2));
+			g2d.fill(spcolor1);
+			g2d.setColor(new Color(188, 204, 14));
+			g2d.fill(spcolor2);
+			g2d.setColor(new Color(204, 96, 14));
+			g2d.fill(spcolor3);
+			g2d.setColor(new Color(255, 255, 255));
+			g2d.fill(spcolor4);
+			g2d.setStroke(new BasicStroke(2));
+			g2d.setColor(new Color(0, 0, 0));
+			g2d.draw(speedometer);
+			g2d.setColor(new Color(184, 4, 4));
+			g2d.setStroke(new BasicStroke(5));
+
+			//draw speedometer pointer
+			g2d.draw(new Line2D.Double(130, s_height - 30, 130 + Math.sin(-Math.toRadians(90 + 180 * (showspeed/maxspeed))) * 80, s_height - 30 + Math.cos(-Math.toRadians(90 + 180 * (showspeed/maxspeed)))*80));
+			g2d.setColor(new Color(0, 0, 0));
+			g2d.fill(spcolor5);
+
+
+			//draw reload time
+			g2d.setColor(new Color(8, 85, 209));
+			if(System.currentTimeMillis() - firetime < 5000){
+
+				g2d.fillRoundRect(s_width - 100, s_height/2 -50 - (int)((System.currentTimeMillis() - firetime) * 0.04), 30, (int)((System.currentTimeMillis() - firetime) * 0.04), 10, 10);
+
+			}else{
+
+				g2d.fillRoundRect(s_width - 100, s_height/2 - 250, 30, 200, 10, 10);
+
+
+			}
+
+			//draw reload time outline
+			g2d.setColor(new Color(0, 0, 0));
+			g2d.setStroke(new BasicStroke(2));
+			g2d.drawRoundRect(s_width - 100, s_height/2 - 250, 30, 200, 10, 10);
+
+
+
+			///minimap
+			g2d.drawRect(s_width - 300, s_height - 300, 300, 300);
+			g2d.drawImage(background, s_width - 300, s_height - 300, 300, 300, null);
+
+			//put cars on minimap
+	    for(int i=0; i<cars.length; i++){
+
+				if(cars[i][5]==1 && cars[i][0] > -1500 && cars[i][1] < 1500){
+
+
+		      int cx = (int) Math.round(cars[i][0]);
+		      int cy = (int) Math.round(cars[i][1]);
+					g2d.setColor(new Color (255, 0, 0));
+
+					if(i==id){
+
+						g2d.setColor(new Color (0, 0, 255));
+
+					}
+
+					g2d.fill(new Ellipse2D.Double(s_width + cx/10 - 152, s_height -152 - cy/10, 4, 4));
+
+				}
+
+	    }
+
+		}
+
+
+    //fps
+
+		g2d.setColor(new Color(0, 0, 0));
+
+    if(fpsdata[99]!=0){
+
+      for (int i=0; i<100; i++) {
+          fps = fps + fpsdata[i];
+
+      }
+
+      fps = 100000/fps;
+
+      fpsdata = new int[100];
+
+			pingprint = ping;
+
+
+
+    }else{
+
+      if(difference == 0){
+        difference=1;
+      }
+
+      for (int i=0; i<100; i++) {
+          if(fpsdata[i]==0){
+            fpsdata[i]=(int) difference;
+            break;
+          }
+
+      }
+    }
+
+    if(fps > 0 && fps!=1000){
+
+      g2d.drawString("FPS: "+fps, s_width - 100, 15);
+
+			//this is here, so the ping doesnt get updated so frequently
+			if(ping > 0){
+
+				g2d.drawString("Ping: " + pingprint + "ms", s_width - 100, 30);
 
 			}
 
     }
 
-				///color screen white if collision accures
-				if(cars[id][5]!=1 || collision){
-					g2d.setColor(new Color(255, 255, 255));
-					g2d.fillRect(0, 0, s_width, s_height);
+		///render message
+		g2d.drawString(outputstring, 10, 15);
 
-					g2d.setColor(new Color(0, 0, 0));
+		//show kills and deaths
+		g2d.setColor(new Color(255, 255, 255));
+		g2d.fillRoundRect(10, 44, 100, 58, 7, 7);
+		g2d.setStroke(new BasicStroke(2));
+		g2d.setColor(new Color(0, 0, 0));
+		g2d.drawRoundRect(10, 44, 100, 58, 7, 7);
+		g.setFont(new Font("Georgia", Font.PLAIN, 17));
+		g2d.drawString((int)kills + " kills", 20, 70);
+		g2d.drawString((int)deaths + " deaths", 20, 92);
 
-					g2d.fill(new Arc2D.Float(s_width/2 - 100, s_height/2 - 100, 200, 200, 180, -(float)((System.currentTimeMillis() - cars[id][6])*360/5000), Arc2D.PIE));
-					g2d.setColor(new Color(255, 255, 255));
-					g2d.fill(new Arc2D.Float(s_width/2 - 50, s_height/2 - 50, 100, 100, 180, -360, Arc2D.PIE));
+		try{
+			Thread.sleep(5);
+		}catch(Exception e){}
 
-					g2d.setColor(new Color(0, 0, 0));
-					g2d.drawString("Respawning", s_width/2 - 35, s_height/2 + 6);
-
-				}
-
-
-		    //fps
-
-				g2d.setColor(new Color(0, 0, 0));
-
-		    if(fpsdata[99]!=0){
-
-		      for (int i=0; i<100; i++) {
-		          fps = fps + fpsdata[i];
-
-		      }
-
-		      fps = 100000/fps;
-
-		      fpsdata = new int[100];
-
-					pingprint = ping;
-
-
-
-		    }else{
-
-		      if(difference == 0){
-		        difference=1;
-		      }
-
-		      for (int i=0; i<100; i++) {
-		          if(fpsdata[i]==0){
-		            fpsdata[i]=(int) difference;
-		            break;
-		          }
-
-		      }
-		    }
-
-		    if(fps > 0 && fps!=1000){
-
-		      g2d.drawString("FPS: "+fps, s_width - 100, 15);
-
-					//this is here, so the ping doesnt get updated so frequently
-					if(ping > 0){
-
-						g2d.drawString("Ping: " + pingprint + "ms", s_width - 100, 30);
-
-					}
-
-		    }
-
-				///render message
-				g2d.drawString(outputstring, 10, 15);
-
-				//show kills and deaths
-				g2d.setColor(new Color(255, 255, 255));
-				g2d.fillRoundRect(10, 44, 100, 58, 7, 7);
-				g2d.setStroke(new BasicStroke(2));
-				g2d.setColor(new Color(0, 0, 0));
-				g2d.drawRoundRect(10, 44, 100, 58, 7, 7);
-				g.setFont(new Font("Georgia", Font.PLAIN, 17));
-				g2d.drawString((int)kills + " kills", 20, 70);
-				g2d.drawString((int)deaths + " deaths", 20, 92);
-
-
-
-    repaint();
-
+		repaint();
 
 	}
 
@@ -364,7 +366,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 				/////////start graphics
 
 		    JFrame frame = new JFrame("Game");
-
 
 				Multiplayer Multiplayer = new Multiplayer();
 
@@ -473,7 +474,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 		    });
 
 
-				boolean developement = false; //if in developement set this to true (this will resize the window)
+				boolean developement = true; //if in developement set this to true (this will resize the window)
 
 				if(developement){
 
@@ -686,7 +687,6 @@ public static void calculate(){
 
 			angle = angle +((mx - s_width/2)/s_width)*difference*9/100;
 
-
 			cars[id][3] = angle;
 
 			if(my - s_height/2 < 0){
@@ -702,20 +702,12 @@ public static void calculate(){
 
 		}
 
-
-	try{
-		Thread.sleep(5); //limit fps
-	}catch (Exception e){}
-
-}
-
+	}
 
 }
 
 
 class GameLoop extends Thread implements Runnable{
-
-
 
 	public void run(){
 
@@ -724,11 +716,13 @@ class GameLoop extends Thread implements Runnable{
 			if(Multiplayer.connected){
 				Multiplayer.calculate();
 			}
+			try{
+				Thread.sleep(5); //limit fps
+			}catch (Exception e){}
 
 		}
 
 	}
-
 
 }
 
