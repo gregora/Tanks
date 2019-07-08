@@ -122,7 +122,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 
 		///color screen white if collision accures
-		///*
 		if(cars[id][5]!=1 || collision){
 			g2d.setColor(new Color(255, 255, 255));
 			g2d.fillRect(0, 0, s_width, s_height);
@@ -131,7 +130,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 			g2d.fill(new Arc2D.Float(s_width/2 - 100, s_height/2 - 100, 200, 200, 180, -(float)((System.currentTimeMillis() - cars[id][6])*360/5000), Arc2D.PIE));
 			g2d.setColor(new Color(255, 255, 255));
-			g2d.fill(new Arc2D.Float(s_width/2 - 50, s_height/2 - 50, 100, 100, 180, -360, Arc2D.PIE));
+			g2d.fill(new Ellipse2D.Double(s_width/2 - 50, s_height/2 - 50, 100, 100));
 
 			g2d.setColor(new Color(0, 0, 0));
 			g2d.drawString("Respawning", s_width/2 - 35, s_height/2 + 6);
@@ -352,7 +351,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 		g2d.drawString((int)deaths + " deaths", 20, 92);
 
 		try{
-			Thread.sleep(5);
+			Thread.sleep(10);
 		}catch(Exception e){}
 
 		repaint();
@@ -717,7 +716,7 @@ class GameLoop extends Thread implements Runnable{
 				Multiplayer.calculate();
 			}
 			try{
-				Thread.sleep(5); //limit fps
+				Thread.sleep(10); //limit fps
 			}catch (Exception e){}
 
 		}

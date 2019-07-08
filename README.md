@@ -24,4 +24,5 @@ You can control  your tank with:
 
 ## Screenshots
 
-<img src=https://i.imgur.com/aDSgPA2.png>
+<img src=https://i.imgur.com/BndWxzk.png>
+<img src=https://i.imgur.com/QunexsN.png>
