@@ -474,7 +474,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 		    });
 
 
-				boolean developement = true; //if in developement set this to true (this will resize the window)
+				boolean developement = false; //if in developement set this to true (this will resize the window)
 
 				if(developement){
 
