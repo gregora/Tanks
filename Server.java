@@ -196,7 +196,7 @@ class Calc extends Thread implements Runnable {
 
             if(i2 != i){
 
-              if(Server.cars[i][5] == 1){
+              if(Server.cars[i2][5] == 1){
 
                 if(checkCollision(Server.cars[i][0], Server.cars[i][1], Server.cars[i][3], Server.cars[i2][0], Server.cars[i2][1], Server.cars[i2][3])==true){
 
