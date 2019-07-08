@@ -28,7 +28,7 @@ public class Multiplayer extends JPanel implements MouseListener {
   public static int xint = 0;
   public static int yint = 0;
 
-  public static double[][] cars = new double[10][6]; ///0 = x coordinate, 1 = y coordinate, 2 = speed, 3 = angle, 4 = gunangle, 5 = time from death
+  public static double[][] cars = new double[10][7]; ///0 = x coordinate, 1 = y coordinate, 2 = speed, 3 = angle, 4 = gunangle, 5 = state of player, 6 = time of death
 	public static double[][] bullets = new double[10][3];
 
 	public static int id;
@@ -125,7 +125,7 @@ public class Multiplayer extends JPanel implements MouseListener {
     for(int i=0; i<cars.length; i++){
 
 
-			if(i!=id && (cars[i][0]!=0 || cars[i][1] != 0)){
+			if(i!=id && cars[i][5] == 1){
 
 	      int cx = (int) Math.round(cars[i][0]);
 	      int cy = (int) Math.round(cars[i][1]);
@@ -187,69 +187,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 
 
-
-    //fps
-
-		g2d.setColor(new Color(0, 0, 0));
-
-    if(fpsdata[99]!=0){
-
-      for (int i=0; i<100; i++) {
-          fps = fps + fpsdata[i];
-
-      }
-
-      fps = 100000/fps;
-
-      fpsdata = new int[100];
-
-			pingprint = ping;
-
-
-
-    }else{
-
-      if(difference == 0){
-        difference=1;
-      }
-
-      for (int i=0; i<100; i++) {
-          if(fpsdata[i]==0){
-            fpsdata[i]=(int) difference;
-            break;
-          }
-
-      }
-    }
-
-    if(fps > 0 && fps!=1000){
-
-      g2d.drawString("FPS: "+fps, s_width - 100, 15);
-
-			//this is here, so the ping doesnt get updated so frequently
-			if(ping > 0){
-
-				g2d.drawString("Ping: " + pingprint + "ms", s_width - 100, 30);
-
-			}
-
-    }
-
-		///render message
-		g2d.drawString(outputstring, 10, 15);
-
-		//show kills and deaths
-		g2d.setColor(new Color(255, 255, 255));
-		g2d.fillRoundRect(10, 44, 100, 58, 7, 7);
-		g2d.setStroke(new BasicStroke(2));
-		g2d.setColor(new Color(0, 0, 0));
-		g2d.drawRoundRect(10, 44, 100, 58, 7, 7);
-		g.setFont(new Font("Georgia", Font.PLAIN, 17));
-		g2d.drawString((int)kills + " kills", 20, 70);
-		g2d.drawString((int)deaths + " deaths", 20, 92);
-
-
-		//g2d.drawString("Speed: " + String.valueOf((int)(Multiplayer.speedall*(3.6/10)))+"km/h", 10, s_height - 20);
 
 		///render speedometer
 		Shape speedometer = new Arc2D.Float(30, s_height - 130, 200, 200, 0, 180, Arc2D.CHORD);
@@ -315,10 +252,9 @@ public class Multiplayer extends JPanel implements MouseListener {
 		g2d.drawImage(background, s_width - 300, s_height - 300, 300, 300, null);
 
 		//put cars on minimap
-
     for(int i=0; i<cars.length; i++){
 
-			if((cars[i][0]!=0 || cars[i][1] != 0) && cars[i][0] > -1500 && cars[i][1] < 1500){
+			if(cars[i][5]==1 && cars[i][0] > -1500 && cars[i][1] < 1500){
 
 
 	      int cx = (int) Math.round(cars[i][0]);
@@ -336,6 +272,84 @@ public class Multiplayer extends JPanel implements MouseListener {
 			}
 
     }
+
+				///color screen white if collision accures
+				if(cars[id][5]!=1 || collision){
+					g2d.setColor(new Color(255, 255, 255));
+					g2d.fillRect(0, 0, s_width, s_height);
+
+					g2d.setColor(new Color(0, 0, 0));
+
+					g2d.fill(new Arc2D.Float(s_width/2 - 100, s_height/2 - 100, 200, 200, 180, -(float)((System.currentTimeMillis() - cars[id][6])*360/5000), Arc2D.PIE));
+					g2d.setColor(new Color(255, 255, 255));
+					g2d.fill(new Arc2D.Float(s_width/2 - 50, s_height/2 - 50, 100, 100, 180, -360, Arc2D.PIE));
+
+					g2d.setColor(new Color(0, 0, 0));
+					g2d.drawString("Respawning", s_width/2 - 35, s_height/2 + 6);
+
+				}
+
+
+		    //fps
+
+				g2d.setColor(new Color(0, 0, 0));
+
+		    if(fpsdata[99]!=0){
+
+		      for (int i=0; i<100; i++) {
+		          fps = fps + fpsdata[i];
+
+		      }
+
+		      fps = 100000/fps;
+
+		      fpsdata = new int[100];
+
+					pingprint = ping;
+
+
+
+		    }else{
+
+		      if(difference == 0){
+		        difference=1;
+		      }
+
+		      for (int i=0; i<100; i++) {
+		          if(fpsdata[i]==0){
+		            fpsdata[i]=(int) difference;
+		            break;
+		          }
+
+		      }
+		    }
+
+		    if(fps > 0 && fps!=1000){
+
+		      g2d.drawString("FPS: "+fps, s_width - 100, 15);
+
+					//this is here, so the ping doesnt get updated so frequently
+					if(ping > 0){
+
+						g2d.drawString("Ping: " + pingprint + "ms", s_width - 100, 30);
+
+					}
+
+		    }
+
+				///render message
+				g2d.drawString(outputstring, 10, 15);
+
+				//show kills and deaths
+				g2d.setColor(new Color(255, 255, 255));
+				g2d.fillRoundRect(10, 44, 100, 58, 7, 7);
+				g2d.setStroke(new BasicStroke(2));
+				g2d.setColor(new Color(0, 0, 0));
+				g2d.drawRoundRect(10, 44, 100, 58, 7, 7);
+				g.setFont(new Font("Georgia", Font.PLAIN, 17));
+				g2d.drawString((int)kills + " kills", 20, 70);
+				g2d.drawString((int)deaths + " deaths", 20, 92);
+
 
 
     repaint();
@@ -459,7 +473,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 		    });
 
 
-				boolean developement = true; //if in developement set this to true (this will resize the window)
+				boolean developement = false; //if in developement set this to true (this will resize the window)
 
 				if(developement){
 
@@ -520,6 +534,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 						try {
 
+
 							//send all player's data
 							Multiplayer.sendData[0] = Multiplayer.id;
 							Multiplayer.sendData[1] = Multiplayer.angle;
@@ -558,6 +573,9 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 								Multiplayer.cars[i][0] = recData[0][i][0];
 								Multiplayer.cars[i][1] = recData[0][i][1];
+
+								Multiplayer.cars[i][5] = recData[0][i][5];
+								Multiplayer.cars[i][6] = recData[0][i][6];
 
 							}
 
@@ -615,12 +633,13 @@ public static void calculate(){
 
 			if(i != id){
 
-				if(cars[i][0] != 0 || cars[i][1] != 0 ||  cars[i][2] != 0 || cars[i][3] != 0){
+				if(cars[i][5] == 1){
 
 					if(Calc.checkCollision(x, y, angle, cars[i][0], cars[i][1], cars[i][3])==true){
 
 						speedall = 0;
 						collision = true;
+						cars[id][5] = 0;
 
 					}else{
 
@@ -647,6 +666,8 @@ public static void calculate(){
         if(Calc.checkBulletCollision(bullets[i][0], bullets[i][1], x, y, angle) == true){
 
 					collision = true;
+					cars[id][5] = 0;
+					speedall = 0;
 
         }
 
@@ -657,7 +678,7 @@ public static void calculate(){
 
 		////get angle and gun angle if connected
 
-		if(connected && !collision){
+		if(connected && !collision && cars[id][5] == 1){
 
 			Point p = MouseInfo.getPointerInfo().getLocation();
 			double mx = p.getX();
@@ -680,6 +701,7 @@ public static void calculate(){
 
 
 		}
+
 
 	try{
 		Thread.sleep(5); //limit fps

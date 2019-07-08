@@ -14,8 +14,8 @@ import java.awt.geom.*;
 @SuppressWarnings("serial")
 public class Server{
 
-  public static double[][] cars = new double[10][6];
-  ///0 = x coordinate, 1 = y coordinate, 2 = speed, 3 = angle, 4 = gunangle, 5 = time from death
+  public static double[][] cars = new double[10][7];
+  ///0 = x coordinate, 1 = y coordinate, 2 = speed, 3 = angle, 4 = gunangle, 5 = state of player, 6 = time of death
   public static double[][] bullets = new double[10][3];
   //0 = x, 1 = y, 2 = angle
   public static double[][] kills = new double[10][2];
@@ -35,8 +35,8 @@ public class Server{
 	public static void main(String[] args) throws InterruptedException {
 
       //bot
-      //double[] car1 = {-50, -100, 20, 0, 0, 0};
-      //Server.cars[0]=car1;
+      double[] car1 = {-50, -100, 20, 0, 0, 1, 0};
+      Server.cars[0]=car1;
 
       ////////start networking
 
@@ -190,13 +190,13 @@ class Calc extends Thread implements Runnable {
 
       for (int i = 0; i<Server.cars.length; i++){
 
-        if(Server.cars[i][0] != 0 || Server.cars[i][1] != 0 ||  Server.cars[i][2] != 0 || Server.cars[i][3] != 0){
+        if(Server.cars[i][5] == 1){
 
           for(int i2 = 0; i2<Server.cars.length; i2++){
 
             if(i2 != i){
 
-              if(Server.cars[i2][0] != 0 || Server.cars[i2][1] != 0 ||  Server.cars[i2][2] != 0 || Server.cars[i2][3] != 0){
+              if(Server.cars[i][5] == 1){
 
                 if(checkCollision(Server.cars[i][0], Server.cars[i][1], Server.cars[i][3], Server.cars[i2][0], Server.cars[i2][1], Server.cars[i2][3])==true){
 
@@ -209,6 +209,12 @@ class Calc extends Thread implements Runnable {
                   Server.cars[i2][2] = 0;
                   Server.cars[i2][0] = -1500 + Math.random()*3000;
                   Server.cars[i2][1] = -1500 + Math.random()*3000;
+
+                  //set state to dead
+                  Server.cars[i][5] = 0;
+                  Server.cars[i2][5] = 0;
+                  Server.cars[i][6] = System.currentTimeMillis();
+                  Server.cars[i2][6] = System.currentTimeMillis();
 
                   //add kills to the list
                   Server.kills[i][0] = Server.kills[i][0] + 1;
@@ -229,6 +235,18 @@ class Calc extends Thread implements Runnable {
           Server.cars[i][0] = Server.cars[i][0] + Math.sin(Math.toRadians(Server.cars[i][3]))*Server.cars[i][2]*(Server.difference)/1000;
           Server.cars[i][1] = Server.cars[i][1] + Math.cos(Math.toRadians(Server.cars[i][3]))*Server.cars[i][2]*(Server.difference)/1000;
 
+      }else{
+
+        if(Server.cars[i][6] != 0){
+
+          if(System.currentTimeMillis() - Server.cars[i][6]  > 5000){
+
+            Server.cars[i][5] = 1;
+
+          }
+
+        }
+
       }
 
     }
@@ -245,13 +263,17 @@ class Calc extends Thread implements Runnable {
 
         for(int i2 = 0; i2<Server.cars.length; i2++){
 
-          if((Server.cars[i2][0] != 0 || Server.cars[i2][1] != 0 || Server.cars[i2][2] != 0) && i != i2){
+          if(Server.cars[i2][5]==1 && i != i2){
 
             if(checkBulletCollision(Server.bullets[i][0], Server.bullets[i][1], Server.cars[i2][0], Server.cars[i2][1], Server.cars[i2][3]) == true){
 
               Server.cars[i2][2] = 0;
               Server.cars[i2][0] = -1500 + Math.random()*3000;
               Server.cars[i2][1] = -1500 + Math.random()*3000;
+
+              //set state to dead
+              Server.cars[i2][5] = 0;
+              Server.cars[i2][6] = System.currentTimeMillis();
 
               Server.bullets[i][0] = 0;
               Server.bullets[i][1] = 0;
@@ -385,11 +407,11 @@ class NewClient extends Thread implements Runnable {
 
       for(int c=0; c<Server.cars.length; c++){
 
-        if(Server.cars[c][0] == 0 && Server.cars[c][1] == 0 && Server.cars[c][2] == 0 && Server.cars[c][3] ==0){
+        if(Server.cars[c][5]!=1){
           dos.writeInt(c);
           id = c;
 
-          double[] newcar = {-1500 + Math.random()*3000, -1500 + Math.random()*3000, 0, 0, 0};
+          double[] newcar = {-1500 + Math.random()*3000, -1500 + Math.random()*3000, 0, 0, 0, 1, 1};
           Server.cars[id] = newcar;
 
           break;
@@ -414,6 +436,8 @@ class NewClient extends Thread implements Runnable {
 
           }
 
+
+
           if(recData[4] == 1 && fireTime + 5000 < System.currentTimeMillis()){
 
             fireTime = System.currentTimeMillis();
@@ -426,8 +450,11 @@ class NewClient extends Thread implements Runnable {
 
           double [][][] sendData = {Server.cars, Server.bullets, Server.kills};
 
+
+
           oos.writeObject(sendData);
           oos.reset();
+
 
         }catch (Exception e){
           double[] change = {0, 0, 0, 0, 0, 0};
