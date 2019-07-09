@@ -340,11 +340,8 @@ public class Multiplayer extends JPanel implements MouseListener {
       g2d.drawString("FPS: "+fps, s_width - 100, 15);
 
 			//this is here, so the ping doesnt get updated so frequently
-			if(ping > 0){
+			g2d.drawString("Ping: " + pingprint + "ms", s_width - 100, 30);
 
-				g2d.drawString("Ping: " + pingprint + "ms", s_width - 100, 30);
-
-			}
 
     }
 
@@ -374,6 +371,8 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 
 				/////////start graphics
+
+				System.setProperty("sun.java2d.opengl", "true");
 
 		    JFrame frame = new JFrame("Game");
 
@@ -433,6 +432,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 				try{
 
 					background = ImageIO.read(Multiplayer.class.getResource("/img/background.png"));
+
 
 				}catch(Exception e){
 
@@ -727,7 +727,7 @@ class GameLoop extends Thread implements Runnable{
 				Multiplayer.calculate();
 			}
 			try{
-				Thread.sleep(10); //limit fps
+				Thread.sleep(10);
 			}catch (Exception e){}
 
 		}
