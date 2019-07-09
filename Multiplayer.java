@@ -16,6 +16,8 @@ import java.util.*;
 import java.net.*;
 import java.io.*;
 
+import javax.swing.Timer;
+
 @SuppressWarnings("serial")
 public class Multiplayer extends JPanel implements MouseListener {
 	public static double x = 0;
@@ -30,12 +32,17 @@ public class Multiplayer extends JPanel implements MouseListener {
 
   public static double[][] cars = new double[10][7]; ///0 = x coordinate, 1 = y coordinate, 2 = speed, 3 = angle, 4 = gunangle, 5 = state of player, 6 = time of death
 	public static double[][] bullets = new double[10][3];
+	public static double[][] obstacles = new double[10][2];
 
 	public static int id;
 
   public static double time;
   public static double lasttime = 0.0;
   public static double difference;
+
+	public static double time2;
+  public static double lasttime2 = 0.0;
+  public static double difference2;
 
 	public static double kills = 0;
 	public static double deaths = 0;
@@ -97,6 +104,11 @@ public class Multiplayer extends JPanel implements MouseListener {
 	public void paint(Graphics g) {
 
 		double useangle  = angle;
+
+		///calculate difference between frames
+		time2 = System.currentTimeMillis();
+		difference2 = time2 - lasttime2;
+		lasttime2 = time2;
 
 		x = cars[id][0];
 		y = cars[id][1];
@@ -260,7 +272,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 			g2d.drawRoundRect(s_width - 100, s_height/2 - 250, 30, 200, 10, 10);
 
 
-
 			///minimap
 			g2d.drawRect(s_width - 300, s_height - 300, 300, 300);
 			g2d.drawImage(background, s_width - 300, s_height - 300, 300, 300, null);
@@ -311,13 +322,13 @@ public class Multiplayer extends JPanel implements MouseListener {
 
     }else{
 
-      if(difference == 0){
-        difference=1;
+      if(difference2 == 0){
+        difference2=1;
       }
 
       for (int i=0; i<100; i++) {
           if(fpsdata[i]==0){
-            fpsdata[i]=(int) difference;
+            fpsdata[i]=(int) difference2;
             break;
           }
 
@@ -350,9 +361,9 @@ public class Multiplayer extends JPanel implements MouseListener {
 		g2d.drawString((int)kills + " kills", 20, 70);
 		g2d.drawString((int)deaths + " deaths", 20, 92);
 
-		try{
+		/*try{
 			Thread.sleep(10);
-		}catch(Exception e){}
+		}catch(Exception e){}*/
 
 		repaint();
 
@@ -618,8 +629,8 @@ public static void calculate(){
 		}
 
 
-		///calculate difference between frames
-		Multiplayer.time = System.currentTimeMillis();
+		///calculate difference between calculations
+		time = System.currentTimeMillis();
 		difference = time - lasttime;
 		lasttime = time;
 

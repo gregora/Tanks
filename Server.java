@@ -20,6 +20,7 @@ public class Server{
   //0 = x, 1 = y, 2 = angle
   public static double[][] kills = new double[10][2];
   //0 = kills, 1 = deaths
+  public static double[][] obstacles = new double[10][2];
 
   public static double maxspeed = 140;
 
@@ -35,8 +36,8 @@ public class Server{
 	public static void main(String[] args) throws InterruptedException {
 
       //bot
-      double[] car1 = {-50, -100, 20, 0, 0, 1, 0};
-      Server.cars[0]=car1;
+      //double[] car1 = {-50, -100, 20, 0, 0, 1, 0};
+      //Server.cars[0]=car1;
 
       ////////start networking
 
@@ -172,6 +173,13 @@ class Calc extends Thread implements Runnable {
 
 
   public void run(){
+
+    for(int x = 0; x<Server.obstacles.length; x++){
+
+      Server.obstacles[x][0] = -1500 + 3000*Math.random();
+      Server.obstacles[x][1] = -1500 + 3000*Math.random();
+
+    }
 
 
     while (true){
