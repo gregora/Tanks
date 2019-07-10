@@ -59,6 +59,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
   public static int s_width;
   public static int s_height;
+	public static double s_diag;
 
 	public static String ip = "localhost";
 
@@ -207,15 +208,17 @@ public class Multiplayer extends JPanel implements MouseListener {
 			}
 
 			///render obstacles
-
+			g2d.setColor(new Color(169, 170, 171));
 			for(int i=0; i<obstacles.length; i++){
 
 				int ox = (int) Math.round(obstacles[i][0]);
 				int oy = (int) Math.round(obstacles[i][1]);
 
-				g2d.setColor(new Color(169, 170, 171));
-				g2d.fill(new Ellipse2D.Double(ox - xint + s_width/2 - 40, -oy -40 + yint + s_height/2, 80, 80));
+				if(Math.abs(xint - ox) < s_diag/2 + 40 && Math.abs(yint - oy) < s_diag/2 + 40){
 
+					g2d.fill(new Ellipse2D.Double(ox - xint + s_width/2 - 40, -oy -40 + yint + s_height/2, 80, 80));
+
+				}
 			}
 
 
@@ -436,7 +439,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 					background = ImageIO.read(Multiplayer.class.getResource("/img/background.png"));
 
-
 				}catch(Exception e){
 
 					System.out.println(e);
@@ -504,6 +506,8 @@ public class Multiplayer extends JPanel implements MouseListener {
 					frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
 
 				}
+
+				s_diag = Math.sqrt(Math.pow(s_width, 2)+Math.pow(s_height, 2));
 
 				frame.setSize(Multiplayer.s_width, Multiplayer.s_height);
 				frame.setResizable(false);
