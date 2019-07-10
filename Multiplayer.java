@@ -32,7 +32,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
   public static double[][] cars = new double[10][7]; ///0 = x coordinate, 1 = y coordinate, 2 = speed, 3 = angle, 4 = gunangle, 5 = state of player, 6 = time of death
 	public static double[][] bullets = new double[10][3];
-	public static double[][] obstacles = new double[10][2];
+	public static double[][] obstacles = new double[100][2];
 
 	public static int id;
 
@@ -200,9 +200,21 @@ public class Multiplayer extends JPanel implements MouseListener {
 				if(bx != 0 || by != 0){
 
 					g2d.setColor(new Color(0, 0, 0));
-					g2d.fill(new Ellipse2D.Double(bx - xint + s_width/2 - 3, -by -3 + yint + s_height/2, 3, 3));
+					g2d.fill(new Ellipse2D.Double(bx - xint + s_width/2 - 3, -by -3 + yint + s_height/2, 6, 6));
 
 				}
+
+			}
+
+			///render obstacles
+
+			for(int i=0; i<obstacles.length; i++){
+
+				int ox = (int) Math.round(obstacles[i][0]);
+				int oy = (int) Math.round(obstacles[i][1]);
+
+				g2d.setColor(new Color(169, 170, 171));
+				g2d.fill(new Ellipse2D.Double(ox - xint + s_width/2 - 40, -oy -40 + yint + s_height/2, 80, 80));
 
 			}
 
@@ -211,12 +223,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 	    g2d.rotate(Math.toRadians(useangle), s_width/2, s_height/2);
 	    g2d.setColor(new Color (0, 70, 0));
 	    g2d.fillRoundRect(s_width/2 - 15, s_height/2 - 25, 30, 50, 7, 7);
-
-
-			//experimental
-			//g2d.setColor(new Color (0, 60, 0));
-			//g2d.fill(new Ellipse2D.Double(s_width/2 - 10, s_height/2 + 20, 10, 10));
-			//g2d.fill(new Ellipse2D.Double(s_width/2, s_height/2 + 20, 10, 10));
 
 			g2d.setColor(new Color (0, 38, 10));
 			g2d.fill(new Ellipse2D.Double(s_width/2 - 12, s_height/2 - 12, 24, 24));
@@ -358,9 +364,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 		g2d.drawString((int)kills + " kills", 20, 70);
 		g2d.drawString((int)deaths + " deaths", 20, 92);
 
-		/*try{
-			Thread.sleep(10);
-		}catch(Exception e){}*/
 
 		repaint();
 
@@ -573,6 +576,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 							Multiplayer.kills = recData[2][Multiplayer.id][0];
 							Multiplayer.deaths = recData[2][Multiplayer.id][1];
+							Multiplayer.obstacles = recData[3];
 
 							Multiplayer.bullets = recData[1];
 
@@ -582,8 +586,13 @@ public class Multiplayer extends JPanel implements MouseListener {
 								Multiplayer.cars[i][3] = recData[0][i][3];
 								Multiplayer.cars[i][2] = recData[0][i][2];
 
-								Multiplayer.cars[i][0] = recData[0][i][0];
-								Multiplayer.cars[i][1] = recData[0][i][1];
+								//only change position if it is not within 15 pixels
+								if((Math.abs(recData[0][i][0] - Multiplayer.cars[i][0])>15 || Math.abs(recData[0][i][1] - Multiplayer.cars[i][1])>15) && Multiplayer.cars[i][5] == 1){
+
+											Multiplayer.cars[i][0] = recData[0][i][0];
+											Multiplayer.cars[i][1] = recData[0][i][1];
+
+								}
 
 								Multiplayer.cars[i][5] = recData[0][i][5];
 								Multiplayer.cars[i][6] = recData[0][i][6];
@@ -642,6 +651,9 @@ public static void calculate(){
 			cars[i][0] = cars[i][0] + Math.sin(Math.toRadians(cars[i][3]))*cars[i][2]*(difference)/1000;
 			cars[i][1] = cars[i][1] + Math.cos(Math.toRadians(cars[i][3]))*cars[i][2]*(difference)/1000;
 
+			x=cars[id][0];
+			y=cars[id][1];
+
 			if(i != id){
 
 				if(cars[i][5] == 1){
@@ -670,17 +682,8 @@ public static void calculate(){
 
       if(bullets[i][0] != 0 || bullets[i][1] != 0 || bullets[i][2] != 0){
 
-        bullets[i][0] = bullets[i][0] + Math.sin(Math.toRadians(bullets[i][2]))*1000*(difference)/1000;
-        bullets[i][1] = bullets[i][1] + Math.cos(Math.toRadians(bullets[i][2]))*1000*(difference)/1000;
-
-
-        if(Calc.checkBulletCollision(bullets[i][0], bullets[i][1], x, y, angle) == true){
-
-					collision = true;
-					cars[id][5] = 0;
-					speedall = 0;
-
-        }
+        bullets[i][0] = bullets[i][0] + Math.sin(Math.toRadians(bullets[i][2]))*500*(difference)/1000;
+        bullets[i][1] = bullets[i][1] + Math.cos(Math.toRadians(bullets[i][2]))*500*(difference)/1000;
 
       }
 

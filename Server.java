@@ -20,7 +20,7 @@ public class Server{
   //0 = x, 1 = y, 2 = angle
   public static double[][] kills = new double[10][2];
   //0 = kills, 1 = deaths
-  public static double[][] obstacles = new double[10][2];
+  public static double[][] obstacles = new double[100][2];
 
   public static double maxspeed = 140;
 
@@ -91,6 +91,8 @@ public class Server{
             e.printStackTrace();
         }
 
+        Thread.sleep(1000);
+
   		}
 
     }catch (Exception e){
@@ -101,13 +103,6 @@ public class Server{
 
 
 ////end networking
-
-
-
-
-
-
-
 
 	}
 
@@ -195,7 +190,7 @@ class Calc extends Thread implements Runnable {
 
       }
 
-
+      ///check for collision between two cars
       for (int i = 0; i<Server.cars.length; i++){
 
         if(Server.cars[i][5] == 1){
@@ -231,37 +226,26 @@ class Calc extends Thread implements Runnable {
                   Server.kills[i][1] = Server.kills[i][1] + 1;
                   Server.kills[i2][1] = Server.kills[i2][1] + 1;
 
-
                 }
-
               }
-
             }
-
           }
 
           Server.cars[i][0] = Server.cars[i][0] + Math.sin(Math.toRadians(Server.cars[i][3]))*Server.cars[i][2]*(Server.difference)/1000;
           Server.cars[i][1] = Server.cars[i][1] + Math.cos(Math.toRadians(Server.cars[i][3]))*Server.cars[i][2]*(Server.difference)/1000;
 
       }else{
-
         if(Server.cars[i][6] != 0){
-
           if(System.currentTimeMillis() - Server.cars[i][6]  > 5000){
-
             Server.cars[i][5] = 1;
-
           }
-
         }
-
       }
-
     }
 
 
 
-
+    ///check for collision between bullet and car
     for (int i = 0; i<Server.bullets.length; i++){
 
       if(Server.bullets[i][0] != 0 || Server.bullets[i][1] != 0 || Server.bullets[i][2] != 0){
@@ -273,7 +257,7 @@ class Calc extends Thread implements Runnable {
 
           if(Server.cars[i2][5]==1 && i != i2){
 
-            if(checkBulletCollision(Server.bullets[i][0], Server.bullets[i][1], Server.cars[i2][0], Server.cars[i2][1], Server.cars[i2][3]) == true){
+            if(checkBulletCollision(Server.bullets[i][0], Server.bullets[i][1], 3, Server.cars[i2][0], Server.cars[i2][1], Server.cars[i2][3]) == true){
 
               Server.cars[i2][2] = 0;
               Server.cars[i2][0] = -1500 + Math.random()*3000;
@@ -294,8 +278,6 @@ class Calc extends Thread implements Runnable {
 
             }
 
-          }
-
         }
 
 
@@ -303,6 +285,37 @@ class Calc extends Thread implements Runnable {
 
     }
 
+  }
+
+      //check for collison between an obstacle and cars and bullets
+
+      for(int i=0; i<Server.cars.length; i++){
+
+        if(Server.cars[i][5]==1){
+
+          for(int i2 = 0; i2<Server.obstacles.length; i2++){
+
+            if(checkBulletCollision(Server.obstacles[i2][0], Server.obstacles[i2][1], 40, Server.cars[i][0], Server.cars[i][1], Server.cars[i][2])==true){
+
+              Server.obstacles[i2][0] = -1500 + Math.random()*3000;
+              Server.obstacles[i2][1] = -1500 + Math.random()*3000;
+
+            }else if(checkCircleCollision(Server.bullets[i][0], Server.bullets[i][1], 3, Server.obstacles[i2][0], Server.obstacles[i2][1], 40)==true){
+
+              Server.obstacles[i2][0] = -1500 + Math.random()*3000;
+              Server.obstacles[i2][1] = -1500 + Math.random()*3000;
+
+              Server.bullets[i][0] = 0;
+              Server.bullets[i][1] = 0;
+              Server.bullets[i][2] = 0;
+
+            }
+
+          }
+
+        }
+
+      }
 
 
       ///end actual calculations
@@ -354,7 +367,7 @@ class Calc extends Thread implements Runnable {
 
   }
 
-  public static boolean checkBulletCollision(double x1, double y1, double x2, double y2, double a){
+  public static boolean checkBulletCollision(double x1, double y1, double r1, double x2, double y2, double a){
 
 
     Rectangle2D rect1 = new Rectangle2D.Double(x2 - 15, y2 - 25, 30, 50);
@@ -362,7 +375,7 @@ class Calc extends Thread implements Runnable {
     af.rotate(Math.toRadians(-a), x2, y2);
     Shape rrect1 = af.createTransformedShape(rect1);
 
-    Shape circle = new Ellipse2D.Double(x1 - 3, y1 - 3, 6, 6);
+    Shape circle = new Ellipse2D.Double(x1 - r1, y1 - r1, 2*r1, 2*r1);
 
     Area areaA = new Area(rrect1);
     Area areaB = new Area(circle);
@@ -375,6 +388,19 @@ class Calc extends Thread implements Runnable {
 
     }
     return false;
+
+  }
+
+
+  public static boolean checkCircleCollision(double x1, double y1, double r1, double x2, double y2, double r2){
+
+    double dis = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
+
+    if(dis > r1 + r2){
+      return false;
+    }else{
+      return true;
+    }
 
   }
 
@@ -456,7 +482,7 @@ class NewClient extends Thread implements Runnable {
 
           }
 
-          double [][][] sendData = {Server.cars, Server.bullets, Server.kills};
+          double [][][] sendData = {Server.cars, Server.bullets, Server.kills, Server.obstacles};
 
 
 
