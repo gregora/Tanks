@@ -208,7 +208,7 @@ public class Multiplayer extends JPanel implements MouseListener {
 			}
 
 			///render obstacles
-			g2d.setColor(new Color(169, 170, 171));
+			g2d.setColor(new Color(140, 54, 0));
 			for(int i=0; i<obstacles.length; i++){
 
 				int ox = (int) Math.round(obstacles[i][0]);
@@ -392,7 +392,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 
 					Multiplayer.ip = "localhost";
 
-
 					//run server on another thread
 					RunServer rs = new RunServer();
 					Thread trs = new Thread(rs);
@@ -409,7 +408,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 						System.exit(0);
 
 					}
-
 
 				}else if(x==2){
 
@@ -457,7 +455,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 							if(key == 'w' && Multiplayer.speedall < maxspeed - 12){
 
 			          Multiplayer.speedall = Multiplayer.speedall + 10;
-
 
 			        }else if(key == 's'){
 
@@ -514,8 +511,6 @@ public class Multiplayer extends JPanel implements MouseListener {
 				frame.setUndecorated(true);
 				frame.setVisible(true);
 				frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-
 				/////////end graphics
 
 
